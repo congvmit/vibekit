@@ -66,7 +66,7 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <project_name
 
 After initialization, you should see the following commands available in your AI agent:
 
-- `/speckit.specify` - Create specifications
+- `/vibekit.specify` - Create specifications
 - `/speckit.plan` - Generate implementation plans  
 - `/speckit.tasks` - Break down into actionable tasks
 

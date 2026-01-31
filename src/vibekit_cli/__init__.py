@@ -10,18 +10,18 @@
 # ]
 # ///
 """
-Specify CLI - Setup tool for Specify projects
+Vibekit CLI - Setup tool for Vibekit projects
 
 Usage:
-    uvx specify-cli.py init <project-name>
-    uvx specify-cli.py init .
-    uvx specify-cli.py init --here
+    uvx vibekit-cli.py init <project-name>
+    uvx vibekit-cli.py init .
+    uvx vibekit-cli.py init --here
 
 Or install globally:
-    uv tool install --from specify-cli.py specify-cli
-    specify init <project-name>
-    specify init .
-    specify init --here
+    uv tool install --from vibekit-cli.py vibekit-cli
+    vibekit init <project-name>
+    vibekit init .
+    vibekit init --here
 """
 
 import os
@@ -233,15 +233,15 @@ SCRIPT_TYPE_CHOICES = {"sh": "POSIX Shell (bash/zsh)", "ps": "PowerShell"}
 CLAUDE_LOCAL_PATH = Path.home() / ".claude" / "local" / "claude"
 
 BANNER = """
-███████╗██████╗ ███████╗ ██████╗██╗███████╗██╗   ██╗
-██╔════╝██╔══██╗██╔════╝██╔════╝██║██╔════╝╚██╗ ██╔╝
-███████╗██████╔╝█████╗  ██║     ██║█████╗   ╚████╔╝ 
-╚════██║██╔═══╝ ██╔══╝  ██║     ██║██╔══╝    ╚██╔╝  
-███████║██║     ███████╗╚██████╗██║██║        ██║   
-╚══════╝╚═╝     ╚══════╝ ╚═════╝╚═╝╚═╝        ╚═╝   
+██╗   ██╗██╗██████╗ ███████╗██╗  ██╗██╗████████╗
+╚██╗ ██╔╝██║██╔══██╗██╔════╝██║ ██╔╝██║╚══██╔══╝
+ ╚████╔╝ ██║██████╔╝█████╗  █████╔╝ ██║   ██║   
+  ╚██╔╝  ██║██╔══██╗██╔══╝  ██╔═██╗ ██║   ██║   
+   ██║   ██║██████╔╝███████╗██║  ██╗██║   ██║   
+   ╚═╝   ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝   
 """
 
-TAGLINE = "GitHub Spec Kit - Spec-Driven Development Toolkit"
+TAGLINE = "Vibekit - Spec-Driven Development Toolkit"
 class StepTracker:
     """Track and render hierarchical steps without emojis, similar to Claude Code tree output.
     Supports live auto-refresh via an attached refresh callback.
@@ -434,8 +434,8 @@ class BannerGroup(TyperGroup):
 
 
 app = typer.Typer(
-    name="specify",
-    help="Setup tool for Specify spec-driven development projects",
+    name="vibekit",
+    help="Setup tool for Vibekit spec-driven development projects",
     add_completion=False,
     invoke_without_command=True,
     cls=BannerGroup,
@@ -899,10 +899,10 @@ def download_and_extract_template(project_path: Path, ai_assistant: str, script_
 
 
 def ensure_executable_scripts(project_path: Path, tracker: StepTracker | None = None) -> None:
-    """Ensure POSIX .sh scripts under .specify/scripts (recursively) have execute bits (no-op on Windows)."""
+    """Ensure POSIX .sh scripts under .vibekit/scripts (recursively) have execute bits (no-op on Windows)."""
     if os.name == "nt":
         return  # Windows: skip silently
-    scripts_root = project_path / ".specify" / "scripts"
+    scripts_root = project_path / ".vibekit" / "scripts"
     if not scripts_root.is_dir():
         return
     failures: list[str] = []
@@ -956,7 +956,7 @@ def init(
     github_token: str = typer.Option(None, "--github-token", help="GitHub token to use for API requests (or set GH_TOKEN or GITHUB_TOKEN environment variable)"),
 ):
     """
-    Initialize a new Specify project from the latest template.
+    Initialize a new Vibekit project from the latest template.
     
     This command will:
     1. Check that required tools are installed (git is optional)
@@ -967,17 +967,17 @@ def init(
     6. Optionally set up AI assistant commands
     
     Examples:
-        specify init my-project
-        specify init my-project --ai claude
-        specify init my-project --ai copilot --no-git
-        specify init --ignore-agent-tools my-project
-        specify init . --ai claude         # Initialize in current directory
-        specify init .                     # Initialize in current directory (interactive AI selection)
-        specify init --here --ai claude    # Alternative syntax for current directory
-        specify init --here --ai codex
-        specify init --here --ai codebuddy
-        specify init --here
-        specify init --here --force  # Skip confirmation when current directory not empty
+        vibekit init my-project
+        vibekit init my-project --ai claude
+        vibekit init my-project --ai copilot --no-git
+        vibekit init --ignore-agent-tools my-project
+        vibekit init . --ai claude         # Initialize in current directory
+        vibekit init .                     # Initialize in current directory (interactive AI selection)
+        vibekit init --here --ai claude    # Alternative syntax for current directory
+        vibekit init --here --ai codex
+        vibekit init --here --ai codebuddy
+        vibekit init --here
+        vibekit init --here --force  # Skip confirmation when current directory not empty
     """
 
     show_banner()
@@ -1220,7 +1220,7 @@ def init(
     steps_lines.append(f"{step_num}. Start using slash commands with your AI agent:")
 
     steps_lines.append("   2.1 [cyan]/speckit.constitution[/] - Establish project principles")
-    steps_lines.append("   2.2 [cyan]/speckit.specify[/] - Create baseline specification")
+    steps_lines.append("   2.2 [cyan]/vibekit.specify[/] - Create baseline specification")
     steps_lines.append("   2.3 [cyan]/speckit.plan[/] - Create implementation plan")
     steps_lines.append("   2.4 [cyan]/speckit.tasks[/] - Generate actionable tasks")
     steps_lines.append("   2.5 [cyan]/speckit.implement[/] - Execute implementation")

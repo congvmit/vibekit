@@ -2,10 +2,10 @@
 description: Create or update the feature specification from a natural language feature description.
 handoffs: 
   - label: Build Technical Plan
-    agent: speckit.plan
+    agent: vibekit.plan
     prompt: Create a plan for the spec. I am building with...
   - label: Clarify Spec Requirements
-    agent: speckit.clarify
+    agent: vibekit.clarify
     prompt: Clarify specification requirements
     send: true
 scripts:
@@ -23,7 +23,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-The text the user typed after `/speckit.specify` in the triggering message **is** the feature description. Assume you always have it available in this conversation even if `{ARGS}` appears literally below. Do not ask the user to repeat it unless they provided an empty command.
+The text the user typed after `/vibekit.specify` in the triggering message **is** the feature description. Assume you always have it available in this conversation even if `{ARGS}` appears literally below. Do not ask the user to repeat it unless they provided an empty command.
 
 Given that feature description, do this:
 
