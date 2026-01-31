@@ -634,7 +634,39 @@ def merge_json_files(existing_path: Path, new_content: dict, verbose: bool = Fal
 
     return merged
 
+def copy_local_template(ai_assistant: str, project_path: Path, *, script_type: str = "sh", verbose: bool = True, tracker: StepTracker | None = None) -> Path:
+    """Copy template from local templates directory as fallback when remote fails."""
+    import shutil
+    
+    # Path to local templates
+    template_dir = Path(__file__).parent.parent.parent / "templates" / "project-templates" / f"{ai_assistant}-{script_type}"
+    
+    if not template_dir.exists():
+        raise typer.Exit(f"Local template not found: {template_dir}")
+    
+    if tracker:
+        tracker.add("copy-local", f"Copy local template ({ai_assistant}-{script_type})")
+        tracker.start("copy-local")
+    elif verbose:
+        console.print(f"[cyan]Copying local template: {ai_assistant}-{script_type}[/cyan]")
+    
+    # Copy template files
+    for item in template_dir.iterdir():
+        dest_path = project_path / item.name
+        if item.is_dir():
+            if dest_path.exists():
+                shutil.rmtree(dest_path)
+            shutil.copytree(item, dest_path)
+        else:
+            shutil.copy2(item, dest_path)
+    
+    if tracker:
+        tracker.complete("copy-local")
+    
+    return project_path
+
 def download_template_from_github(ai_assistant: str, download_dir: Path, *, script_type: str = "sh", verbose: bool = True, show_progress: bool = True, client: httpx.Client = None, debug: bool = False, github_token: str = None) -> Tuple[Path, dict]:
+    """Download template ZIP from GitHub releases."""
     repo_owner = "congvmit"
     repo_name = "vibekit"
     if client is None:
@@ -1159,7 +1191,24 @@ def init(
             local_ssl_context = ssl_context if verify else False
             local_client = httpx.Client(verify=local_ssl_context)
 
-            download_and_extract_template(project_path, selected_ai, selected_script, here, verbose=False, tracker=tracker, client=local_client, debug=debug, github_token=github_token)
+            try:
+                download_and_extract_template(project_path, selected_ai, selected_script, here, verbose=False, tracker=tracker, client=local_client, debug=debug, github_token=github_token)
+            except Exception as download_error:
+                console.print(f"[yellow]Remote template download failed, trying local fallback...[/yellow]")
+                if debug:
+                    console.print(f"[dim]Download error: {download_error}[/dim]")
+                
+                # Reset tracker steps for local copy
+                for step in tracker.steps:
+                    if step["key"] in ["fetch", "download", "extract", "zip-list", "extracted-summary"] and step["status"] == "error":
+                        step["status"] = "pending"
+                        step["detail"] = ""
+                
+                try:
+                    copy_local_template(selected_ai, project_path, script_type=selected_script, verbose=False, tracker=tracker)
+                except Exception as local_error:
+                    console.print(f"[red]Local template fallback also failed: {local_error}[/red]")
+                    raise download_error  # Re-raise original error
 
             ensure_executable_scripts(project_path, tracker=tracker)
 

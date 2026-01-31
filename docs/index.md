@@ -1,8 +1,8 @@
-# Spec Kit
+# Vibekit
 
 *Build high-quality software faster.*
 
-**An effort to allow organizations to focus on product scenarios rather than writing undifferentiated code with the help of Spec-Driven Development.**
+**A CLI tool for Spec-Driven Development that allows organizations to focus on product scenarios rather than writing undifferentiated code.**
 
 ## What is Spec-Driven Development?
 

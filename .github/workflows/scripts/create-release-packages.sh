@@ -218,8 +218,22 @@ build_variant() {
       mkdir -p "$base_dir/.bob/commands"
       generate_commands bob md "\$ARGUMENTS" "$base_dir/.bob/commands" "$script" ;;
   esac
-  ( cd "$base_dir" && zip -r "../spec-kit-template-${agent}-${script}-${NEW_VERSION}.zip" . )
-  echo "Created $GENRELEASES_DIR/spec-kit-template-${agent}-${script}-${NEW_VERSION}.zip"
+  python3 -c "
+import zipfile
+import os
+import sys
+base_dir = '$base_dir'
+zip_name = 'spec-kit-template-${agent}-${script}-${NEW_VERSION}.zip'
+zip_path = os.path.join('$GENRELEASES_DIR', zip_name)
+with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+    for root, dirs, files in os.walk(base_dir):
+        for file in files:
+            file_path = os.path.join(root, file)
+            arcname = os.path.relpath(file_path, base_dir)
+            zipf.write(file_path, arcname)
+print(f'Created {zip_path}')
+"
+}
 }
 
 # Determine agent list
