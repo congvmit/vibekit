@@ -884,7 +884,42 @@ def download_and_extract_template(project_path: Path, ai_assistant: str, script_
     else:
         if tracker:
             tracker.complete("extract")
-    finally:
+        
+        # Post-extraction: Rename .specify directories to .vibekit for rebranding
+        if tracker:
+            tracker.add("rebrand", "Rebrand .specify to .vibekit")
+            tracker.start("rebrand")
+        elif verbose:
+            console.print("[cyan]Rebranding directories...[/cyan]")
+        
+        for item in project_path.rglob(".specify"):
+            if item.is_dir():
+                new_name = item.parent / ".vibekit"
+                if new_name.exists():
+                    shutil.rmtree(new_name)
+                item.rename(new_name)
+                if verbose and not tracker:
+                    console.print(f"[cyan]Renamed:[/cyan] {item} → {new_name}")
+        
+        # Also rename speckit.*.md files to vibekit.*.md in agent command directories
+        for agent_dir in project_path.rglob("commands"):
+            if agent_dir.is_dir():
+                for md_file in agent_dir.glob("speckit.*.md"):
+                    new_md_file = md_file.parent / md_file.name.replace("speckit.", "vibekit.")
+                    md_file.rename(new_md_file)
+                    if verbose and not tracker:
+                        console.print(f"[cyan]Renamed:[/cyan] {md_file} → {new_md_file}")
+                    
+                    # Update content: replace speckit. with vibekit.
+                    content = new_md_file.read_text()
+                    updated_content = content.replace("speckit.", "vibekit.")
+                    if updated_content != content:
+                        new_md_file.write_text(updated_content)
+                        if verbose and not tracker:
+                            console.print(f"[cyan]Updated content in:[/cyan] {new_md_file}")
+        
+        if tracker:
+            tracker.complete("rebrand")
         if tracker:
             tracker.add("cleanup", "Remove temporary archive")
 
@@ -1219,11 +1254,11 @@ def init(
 
     steps_lines.append(f"{step_num}. Start using slash commands with your AI agent:")
 
-    steps_lines.append("   2.1 [cyan]/speckit.constitution[/] - Establish project principles")
+    steps_lines.append("   2.1 [cyan]/vibekit.constitution[/] - Establish project principles")
     steps_lines.append("   2.2 [cyan]/vibekit.specify[/] - Create baseline specification")
-    steps_lines.append("   2.3 [cyan]/speckit.plan[/] - Create implementation plan")
-    steps_lines.append("   2.4 [cyan]/speckit.tasks[/] - Generate actionable tasks")
-    steps_lines.append("   2.5 [cyan]/speckit.implement[/] - Execute implementation")
+    steps_lines.append("   2.3 [cyan]/vibekit.plan[/] - Create implementation plan")
+    steps_lines.append("   2.4 [cyan]/vibekit.tasks[/] - Generate actionable tasks")
+    steps_lines.append("   2.5 [cyan]/vibekit.implement[/] - Execute implementation")
 
     steps_panel = Panel("\n".join(steps_lines), title="Next Steps", border_style="cyan", padding=(1,2))
     console.print()
@@ -1232,9 +1267,9 @@ def init(
     enhancement_lines = [
         "Optional commands that you can use for your specs [bright_black](improve quality & confidence)[/bright_black]",
         "",
-        f"○ [cyan]/speckit.clarify[/] [bright_black](optional)[/bright_black] - Ask structured questions to de-risk ambiguous areas before planning (run before [cyan]/speckit.plan[/] if used)",
-        f"○ [cyan]/speckit.analyze[/] [bright_black](optional)[/bright_black] - Cross-artifact consistency & alignment report (after [cyan]/speckit.tasks[/], before [cyan]/speckit.implement[/])",
-        f"○ [cyan]/speckit.checklist[/] [bright_black](optional)[/bright_black] - Generate quality checklists to validate requirements completeness, clarity, and consistency (after [cyan]/speckit.plan[/])"
+        f"○ [cyan]/vibekit.clarify[/] [bright_black](optional)[/bright_black] - Ask structured questions to de-risk ambiguous areas before planning (run before [cyan]/vibekit.plan[/] if used)",
+        f"○ [cyan]/vibekit.analyze[/] [bright_black](optional)[/bright_black] - Cross-artifact consistency & alignment report (after [cyan]/vibekit.tasks[/], before [cyan]/vibekit.implement[/])",
+        f"○ [cyan]/vibekit.checklist[/] [bright_black](optional)[/bright_black] - Generate quality checklists to validate requirements completeness, clarity, and consistency (after [cyan]/vibekit.plan[/])"
     ]
     enhancements_panel = Panel("\n".join(enhancement_lines), title="Enhancement Commands", border_style="cyan", padding=(1,2))
     console.print()
@@ -1293,7 +1328,7 @@ def version():
     # Get CLI version from package metadata
     cli_version = "unknown"
     try:
-        cli_version = importlib.metadata.version("specify-cli")
+        cli_version = importlib.metadata.version("vibekit-cli")
     except Exception:
         # Fallback: try reading from pyproject.toml if running from source
         try:
