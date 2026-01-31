@@ -2,7 +2,7 @@
 
 ## About Vibekit
 
-**GitHub Spec Kit** is a comprehensive toolkit for implementing Spec-Driven Development (SDD) - a methodology that emphasizes creating clear specifications before implementation. The toolkit includes templates, scripts, and workflows that guide development teams through a structured approach to building software.
+**Vibekit** is a comprehensive toolkit for implementing Spec-Driven Development (SDD) - a methodology that emphasizes creating clear specifications before implementation. The toolkit includes templates, scripts, and workflows that guide development teams through a structured approach to building software.
 
 **Vibekit CLI** is the command-line interface that bootstraps projects with the Vibekit framework. It sets up the necessary directory structures, templates, and AI agent integrations to support the Spec-Driven Development workflow.
 
@@ -13,6 +13,7 @@ The toolkit supports multiple AI coding assistants, allowing teams to use their 
 ## General practices
 
 - Any changes to `__init__.py` for the Vibekit CLI require a version rev in `pyproject.toml` and addition of entries to `CHANGELOG.md`.
+- The source code lives in `src/vibekit_cli/__init__.py`.
 
 ## Adding New Agent Support
 
@@ -29,25 +30,25 @@ Vibekit supports multiple AI agents by generating agent-specific command files a
 
 ### Current Supported Agents
 
-| Agent                      | Directory              | Format   | CLI Tool        | Description                 |
-| -------------------------- | ---------------------- | -------- | --------------- | --------------------------- |
-| **Claude Code**            | `.claude/commands/`    | Markdown | `claude`        | Anthropic's Claude Code CLI |
-| **Gemini CLI**             | `.gemini/commands/`    | TOML     | `gemini`        | Google's Gemini CLI         |
-| **GitHub Copilot**         | `.github/agents/`      | Markdown | N/A (IDE-based) | GitHub Copilot in VS Code   |
-| **Cursor**                 | `.cursor/commands/`    | Markdown | `cursor-agent`  | Cursor CLI                  |
-| **Qwen Code**              | `.qwen/commands/`      | TOML     | `qwen`          | Alibaba's Qwen Code CLI     |
-| **opencode**               | `.opencode/command/`   | Markdown | `opencode`      | opencode CLI                |
-| **Codex CLI**              | `.codex/commands/`     | Markdown | `codex`         | Codex CLI                   |
-| **Windsurf**               | `.windsurf/workflows/` | Markdown | N/A (IDE-based) | Windsurf IDE workflows      |
-| **Kilo Code**              | `.kilocode/rules/`     | Markdown | N/A (IDE-based) | Kilo Code IDE               |
-| **Auggie CLI**             | `.augment/rules/`      | Markdown | `auggie`        | Auggie CLI                  |
-| **Roo Code**               | `.roo/rules/`          | Markdown | N/A (IDE-based) | Roo Code IDE                |
-| **CodeBuddy CLI**          | `.codebuddy/commands/` | Markdown | `codebuddy`     | CodeBuddy CLI               |
-| **Qoder CLI**              | `.qoder/commands/`     | Markdown | `qoder`         | Qoder CLI                   |
-| **Amazon Q Developer CLI** | `.amazonq/prompts/`    | Markdown | `q`             | Amazon Q Developer CLI      |
-| **Amp**                    | `.agents/commands/`    | Markdown | `amp`           | Amp CLI                     |
-| **SHAI**                   | `.shai/commands/`      | Markdown | `shai`          | SHAI CLI                    |
-| **IBM Bob**                | `.bob/commands/`       | Markdown | N/A (IDE-based) | IBM Bob IDE                 |
+| Agent                      | Directory               | Format   | CLI Tool        | Description                 |
+| -------------------------- | ----------------------- | -------- | --------------- | --------------------------- |
+| **GitHub Copilot**         | `.github/agents/`       | Markdown | N/A (IDE-based) | GitHub Copilot in VS Code   |
+| **Claude Code**            | `.claude/commands/`     | Markdown | `claude`        | Anthropic's Claude Code CLI |
+| **Gemini CLI**             | `.gemini/commands/`     | TOML     | `gemini`        | Google's Gemini CLI         |
+| **Cursor**                 | `.cursor/commands/`     | Markdown | N/A (IDE-based) | Cursor IDE                  |
+| **Qwen Code**              | `.qwen/commands/`       | TOML     | `qwen`          | Alibaba's Qwen Code CLI     |
+| **opencode**               | `.opencode/command/`    | Markdown | `opencode`      | opencode CLI                |
+| **Codex CLI**              | `.codex/prompts/`       | Markdown | `codex`         | OpenAI Codex CLI            |
+| **Windsurf**               | `.windsurf/workflows/`  | Markdown | N/A (IDE-based) | Windsurf IDE workflows      |
+| **Kilo Code**              | `.kilocode/workflows/`  | Markdown | N/A (IDE-based) | Kilo Code IDE               |
+| **Auggie CLI**             | `.augment/commands/`    | Markdown | `auggie`        | Augment Code CLI            |
+| **Roo Code**               | `.roo/commands/`        | Markdown | N/A (IDE-based) | Roo Code IDE                |
+| **CodeBuddy CLI**          | `.codebuddy/commands/`  | Markdown | `codebuddy`     | CodeBuddy CLI               |
+| **Qoder CLI**              | `.qoder/commands/`      | Markdown | `qoder`         | Qoder CLI                   |
+| **Amazon Q Developer CLI** | `.amazonq/prompts/`     | Markdown | `q`             | Amazon Q Developer CLI      |
+| **Amp**                    | `.agents/commands/`     | Markdown | `amp`           | Amp CLI                     |
+| **SHAI**                   | `.shai/commands/`       | Markdown | `shai`          | OVH SHAI CLI                |
+| **IBM Bob**                | `.bob/commands/`        | Markdown | N/A (IDE-based) | IBM Bob IDE                 |
 
 ### Step-by-Step Integration Guide
 
@@ -111,7 +112,7 @@ Modify `.github/workflows/scripts/create-release-packages.sh`:
 ##### Add to ALL_AGENTS array
 
 ```bash
-ALL_AGENTS=(claude gemini copilot cursor-agent qwen opencode windsurf q)
+ALL_AGENTS=(claude gemini copilot cursor-agent qwen opencode windsurf codex kilocode auggie roo codebuddy amp shai q bob qoder)
 ```
 
 ##### Add case statement for directory structure
@@ -308,12 +309,13 @@ Require a command-line tool to be installed:
 
 - **Claude Code**: `claude` CLI
 - **Gemini CLI**: `gemini` CLI
-- **Cursor**: `cursor-agent` CLI
 - **Qwen Code**: `qwen` CLI
 - **opencode**: `opencode` CLI
-- **Amazon Q Developer CLI**: `q` CLI
+- **Codex CLI**: `codex` CLI
+- **Auggie CLI**: `auggie` CLI
 - **CodeBuddy CLI**: `codebuddy` CLI
 - **Qoder CLI**: `qoder` CLI
+- **Amazon Q Developer CLI**: `q` CLI
 - **Amp**: `amp` CLI
 - **SHAI**: `shai` CLI
 
@@ -322,14 +324,17 @@ Require a command-line tool to be installed:
 Work within integrated development environments:
 
 - **GitHub Copilot**: Built into VS Code/compatible editors
+- **Cursor**: Built into Cursor IDE
 - **Windsurf**: Built into Windsurf IDE
+- **Kilo Code**: Built into VS Code/compatible editors
+- **Roo Code**: Built into VS Code/compatible editors
 - **IBM Bob**: Built into IBM Bob IDE
 
 ## Command File Formats
 
 ### Markdown Format
 
-Used by: Claude, Cursor, opencode, Windsurf, Amazon Q Developer, Amp, SHAI, IBM Bob
+Used by: Claude, Cursor, opencode, Codex, Windsurf, Kilocode, Auggie, Roo, CodeBuddy, Qoder, Amazon Q Developer, Amp, SHAI, IBM Bob
 
 **Standard format:**
 
@@ -371,6 +376,8 @@ Command content with {SCRIPT} and {{args}} placeholders.
   - Copilot: `.github/agents/`
   - Cursor: `.cursor/commands/`
   - Windsurf: `.windsurf/workflows/`
+  - Kilocode: `.kilocode/workflows/`
+  - Roo Code: `.roo/commands/`
 
 ## Argument Patterns
 
