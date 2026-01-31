@@ -32,9 +32,9 @@ rm -rf "$GENRELEASES_DIR"/* || true
 
 rewrite_paths() {
   sed -E \
-    -e 's@(/?)memory/@.specify/memory/@g' \
-    -e 's@(/?)scripts/@.specify/scripts/@g' \
-    -e 's@(/?)templates/@.specify/templates/@g'
+    -e 's@(/?)memory/@.vibekit/memory/@g' \
+    -e 's@(/?)scripts/@.vibekit/scripts/@g' \
+    -e 's@(/?)templates/@.vibekit/templates/@g'
 }
 
 generate_commands() {
@@ -92,11 +92,11 @@ generate_commands() {
     case $ext in
       toml)
         body=$(printf '%s\n' "$body" | sed 's/\\/\\\\/g')
-        { echo "description = \"$description\""; echo; echo "prompt = \"\"\""; echo "$body"; echo "\"\"\""; } > "$output_dir/speckit.$name.$ext" ;;
+        { echo "description = \"$description\""; echo; echo "prompt = \"\"\""; echo "$body"; echo "\"\"\""; } > "$output_dir/vibekit.$name.$ext" ;;
       md)
-        echo "$body" > "$output_dir/speckit.$name.$ext" ;;
+        echo "$body" > "$output_dir/vibekit.$name.$ext" ;;
       agent.md)
-        echo "$body" > "$output_dir/speckit.$name.$ext" ;;
+        echo "$body" > "$output_dir/vibekit.$name.$ext" ;;
     esac
   done
 }
@@ -106,7 +106,7 @@ generate_copilot_prompts() {
   mkdir -p "$prompts_dir"
   
   # Generate a .prompt.md file for each .agent.md file
-  for agent_file in "$agents_dir"/speckit.*.agent.md; do
+  for agent_file in "$agents_dir"/vibekit.*.agent.md; do
     [[ -f "$agent_file" ]] || continue
     
     local basename=$(basename "$agent_file" .agent.md)
@@ -128,29 +128,29 @@ build_variant() {
   mkdir -p "$base_dir"
   
   # Copy base structure but filter scripts by variant
-  SPEC_DIR="$base_dir/.specify"
+  SPEC_DIR="$base_dir/.vibekit"
   mkdir -p "$SPEC_DIR"
   
-  [[ -d memory ]] && { cp -r memory "$SPEC_DIR/"; echo "Copied memory -> .specify"; }
+  [[ -d memory ]] && { cp -r memory "$SPEC_DIR/"; echo "Copied memory -> .vibekit"; }
   
   # Only copy the relevant script variant directory
   if [[ -d scripts ]]; then
     mkdir -p "$SPEC_DIR/scripts"
     case $script in
       sh)
-        [[ -d scripts/bash ]] && { cp -r scripts/bash "$SPEC_DIR/scripts/"; echo "Copied scripts/bash -> .specify/scripts"; }
+        [[ -d scripts/bash ]] && { cp -r scripts/bash "$SPEC_DIR/scripts/"; echo "Copied scripts/bash -> .vibekit/scripts"; }
         # Copy any script files that aren't in variant-specific directories
         find scripts -maxdepth 1 -type f -exec cp {} "$SPEC_DIR/scripts/" \; 2>/dev/null || true
         ;;
       ps)
-        [[ -d scripts/powershell ]] && { cp -r scripts/powershell "$SPEC_DIR/scripts/"; echo "Copied scripts/powershell -> .specify/scripts"; }
+        [[ -d scripts/powershell ]] && { cp -r scripts/powershell "$SPEC_DIR/scripts/"; echo "Copied scripts/powershell -> .vibekit/scripts"; }
         # Copy any script files that aren't in variant-specific directories
         find scripts -maxdepth 1 -type f -exec cp {} "$SPEC_DIR/scripts/" \; 2>/dev/null || true
         ;;
     esac
   fi
   
-  [[ -d templates ]] && { mkdir -p "$SPEC_DIR/templates"; find templates -type f -not -path "templates/commands/*" -not -name "vscode-settings.json" -exec cp --parents {} "$SPEC_DIR"/ \; ; echo "Copied templates -> .specify/templates"; }
+  [[ -d templates ]] && { mkdir -p "$SPEC_DIR/templates"; find templates -type f -not -path "templates/commands/*" -not -name "vscode-settings.json" -exec cp --parents {} "$SPEC_DIR"/ \; ; echo "Copied templates -> .vibekit/templates"; }
   
   # NOTE: We substitute {ARGS} internally. Outward tokens differ intentionally:
   #   * Markdown/prompt (claude, copilot, cursor-agent, opencode): $ARGUMENTS
@@ -218,22 +218,9 @@ build_variant() {
       mkdir -p "$base_dir/.bob/commands"
       generate_commands bob md "\$ARGUMENTS" "$base_dir/.bob/commands" "$script" ;;
   esac
-  python3 -c "
-import zipfile
-import os
-import sys
-base_dir = '$base_dir'
-zip_name = 'spec-kit-template-${agent}-${script}-${NEW_VERSION}.zip'
-zip_path = os.path.join('$GENRELEASES_DIR', zip_name)
-with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-    for root, dirs, files in os.walk(base_dir):
-        for file in files:
-            file_path = os.path.join(root, file)
-            arcname = os.path.relpath(file_path, base_dir)
-            zipf.write(file_path, arcname)
-print(f'Created {zip_path}')
-"
-}
+  local zip_name="vibekit-template-${agent}-${script}-${NEW_VERSION}.zip"
+  local zip_path="$GENRELEASES_DIR/$zip_name"
+  zip -r "$zip_path" "$base_dir"
 }
 
 # Determine agent list
@@ -283,5 +270,5 @@ for agent in "${AGENT_LIST[@]}"; do
 done
 
 echo "Archives in $GENRELEASES_DIR:"
-ls -1 "$GENRELEASES_DIR"/spec-kit-template-*-"${NEW_VERSION}".zip
+ls -1 "$GENRELEASES_DIR"/vibekit-template-*-"${NEW_VERSION}".zip
 

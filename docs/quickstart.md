@@ -107,46 +107,46 @@ first testing thing to ensure that our basic features are set up.
 
 ### Step 3: Refine the Specification
 
-Use the `/speckit.clarify` command to interactively resolve any ambiguities in your specification. You can also provide specific details you want to ensure are included.
+Use the `/vibekit.clarify` command to interactively resolve any ambiguities in your specification. You can also provide specific details you want to ensure are included.
 
 ```bash
-/speckit.clarify I want to clarify the task card details. For each task in the UI for a task card, you should be able to change the current status of the task between the different columns in the Kanban work board. You should be able to leave an unlimited number of comments for a particular card. You should be able to, from that task card, assign one of the valid users.
+/vibekit.clarify I want to clarify the task card details. For each task in the UI for a task card, you should be able to change the current status of the task between the different columns in the Kanban work board. You should be able to leave an unlimited number of comments for a particular card. You should be able to, from that task card, assign one of the valid users.
 ```
 
-You can continue to refine the spec with more details using `/speckit.clarify`:
+You can continue to refine the spec with more details using `/vibekit.clarify`:
 
 ```bash
-/speckit.clarify When you first launch Taskify, it's going to give you a list of the five users to pick from. There will be no password required. When you click on a user, you go into the main view, which displays the list of projects. When you click on a project, you open the Kanban board for that project. You're going to see the columns. You'll be able to drag and drop cards back and forth between different columns. You will see any cards that are assigned to you, the currently logged in user, in a different color from all the other ones, so you can quickly see yours. You can edit any comments that you make, but you can't edit comments that other people made. You can delete any comments that you made, but you can't delete comments anybody else made.
+/vibekit.clarify When you first launch Taskify, it's going to give you a list of the five users to pick from. There will be no password required. When you click on a user, you go into the main view, which displays the list of projects. When you click on a project, you open the Kanban board for that project. You're going to see the columns. You'll be able to drag and drop cards back and forth between different columns. You will see any cards that are assigned to you, the currently logged in user, in a different color from all the other ones, so you can quickly see yours. You can edit any comments that you make, but you can't edit comments that other people made. You can delete any comments that you made, but you can't delete comments anybody else made.
 ```
 
 ### Step 4: Validate the Spec
 
-Validate the specification checklist using the `/speckit.checklist` command:
+Validate the specification checklist using the `/vibekit.checklist` command:
 
 ```bash
-/speckit.checklist
+/vibekit.checklist
 ```
 
-### Step 5: Generate Technical Plan with `/speckit.plan`
+### Step 5: Generate Technical Plan with `/vibekit.plan`
 
 Be specific about your tech stack and technical requirements:
 
 ```bash
-/speckit.plan We are going to generate this using .NET Aspire, using Postgres as the database. The frontend should use Blazor server with drag-and-drop task boards, real-time updates. There should be a REST API created with a projects API, tasks API, and a notifications API.
+/vibekit.plan We are going to generate this using .NET Aspire, using Postgres as the database. The frontend should use Blazor server with drag-and-drop task boards, real-time updates. There should be a REST API created with a projects API, tasks API, and a notifications API.
 ```
 
 ### Step 6: Validate and Implement
 
-Have your AI agent audit the implementation plan using `/speckit.analyze`:
+Have your AI agent audit the implementation plan using `/vibekit.analyze`:
 
 ```bash
-/speckit.analyze
+/vibekit.analyze
 ```
 
 Finally, implement the solution:
 
 ```bash
-/speckit.implement
+/vibekit.implement
 ```
 
 ## Key Principles

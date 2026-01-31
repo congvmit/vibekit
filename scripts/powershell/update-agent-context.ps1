@@ -47,13 +47,13 @@ $NEW_PLAN = $IMPL_PLAN
 $CLAUDE_FILE   = Join-Path $REPO_ROOT 'CLAUDE.md'
 $GEMINI_FILE   = Join-Path $REPO_ROOT 'GEMINI.md'
 $COPILOT_FILE  = Join-Path $REPO_ROOT '.github/agents/copilot-instructions.md'
-$CURSOR_FILE   = Join-Path $REPO_ROOT '.cursor/rules/specify-rules.mdc'
+$CURSOR_FILE   = Join-Path $REPO_ROOT '.cursor/rules/vibekit-rules.mdc'
 $QWEN_FILE     = Join-Path $REPO_ROOT 'QWEN.md'
 $AGENTS_FILE   = Join-Path $REPO_ROOT 'AGENTS.md'
-$WINDSURF_FILE = Join-Path $REPO_ROOT '.windsurf/rules/specify-rules.md'
-$KILOCODE_FILE = Join-Path $REPO_ROOT '.kilocode/rules/specify-rules.md'
-$AUGGIE_FILE   = Join-Path $REPO_ROOT '.augment/rules/specify-rules.md'
-$ROO_FILE      = Join-Path $REPO_ROOT '.roo/rules/specify-rules.md'
+$WINDSURF_FILE = Join-Path $REPO_ROOT '.windsurf/rules/vibekit-rules.md'
+$KILOCODE_FILE = Join-Path $REPO_ROOT '.kilocode/rules/vibekit-rules.md'
+$AUGGIE_FILE   = Join-Path $REPO_ROOT '.augment/rules/vibekit-rules.md'
+$ROO_FILE      = Join-Path $REPO_ROOT '.roo/rules/vibekit-rules.md'
 $CODEBUDDY_FILE = Join-Path $REPO_ROOT 'CODEBUDDY.md'
 $QODER_FILE    = Join-Path $REPO_ROOT 'QODER.md'
 $AMP_FILE      = Join-Path $REPO_ROOT 'AGENTS.md'
@@ -104,13 +104,13 @@ function Write-Err {
 function Validate-Environment {
     if (-not $CURRENT_BRANCH) {
         Write-Err 'Unable to determine current feature'
-        if ($HAS_GIT) { Write-Info "Make sure you're on a feature branch" } else { Write-Info 'Set SPECIFY_FEATURE environment variable or create a feature first' }
+        if ($HAS_GIT) { Write-Info "Make sure you're on a feature branch" } else { Write-Info 'Set VIBEKIT_FEATURE environment variable or create a feature first' }
         exit 1
     }
     if (-not (Test-Path $NEW_PLAN)) {
         Write-Err "No plan.md found at $NEW_PLAN"
         Write-Info 'Ensure you are working on a feature with a corresponding spec directory'
-        if (-not $HAS_GIT) { Write-Info 'Use: $env:SPECIFY_FEATURE=your-feature-name or create a new feature first' }
+        if (-not $HAS_GIT) { Write-Info 'Use: $env:VIBEKIT_FEATURE=your-feature-name or create a new feature first' }
         exit 1
     }
     if (-not (Test-Path $TEMPLATE_FILE)) {

@@ -26,9 +26,9 @@ uvx --from git+https://github.com/congvmit/vibekit.git vibekit init .
 uvx --from git+https://github.com/congvmit/vibekit.git vibekit init --here
 ```
 
-### Specify AI Agent
+### Vibekit AI Agent
 
-You can proactively specify your AI agent during initialization:
+You can proactively configure your AI agent during initialization:
 
 ```bash
 uvx --from git+https://github.com/congvmit/vibekit.git vibekit init <project_name> --ai claude
@@ -37,7 +37,7 @@ uvx --from git+https://github.com/congvmit/vibekit.git vibekit init <project_nam
 uvx --from git+https://github.com/congvmit/vibekit.git vibekit init <project_name> --ai codebuddy
 ```
 
-### Specify Script Type (Shell vs PowerShell)
+### Configure Script Type (Shell vs PowerShell)
 
 All automation scripts now have both Bash (`.sh`) and PowerShell (`.ps1`) variants.
 

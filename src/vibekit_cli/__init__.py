@@ -460,7 +460,7 @@ def callback(ctx: typer.Context):
     """Show banner when no subcommand is provided."""
     if ctx.invoked_subcommand is None and "--help" not in sys.argv and "-h" not in sys.argv:
         show_banner()
-        console.print(Align.center("[dim]Run 'specify --help' for usage information[/dim]"))
+        console.print(Align.center("[dim]Run 'vibekit --help' for usage information[/dim]"))
         console.print()
 
 def run_command(cmd: list[str], check_return: bool = True, capture: bool = False, shell: bool = False) -> Optional[str]:
@@ -549,7 +549,7 @@ def init_git_repo(project_path: Path, quiet: bool = False) -> Tuple[bool, Option
             console.print("[cyan]Initializing git repository...[/cyan]")
         subprocess.run(["git", "init"], check=True, capture_output=True, text=True)
         subprocess.run(["git", "add", "."], check=True, capture_output=True, text=True)
-        subprocess.run(["git", "commit", "-m", "Initial commit from Specify template"], check=True, capture_output=True, text=True)
+        subprocess.run(["git", "commit", "-m", "Initial commit from Vibekit template"], check=True, capture_output=True, text=True)
         if not quiet:
             console.print("[green]✓[/green] Git repository initialized")
         return True, None
@@ -700,7 +700,7 @@ def download_template_from_github(ai_assistant: str, download_dir: Path, *, scri
         raise typer.Exit(1)
 
     assets = release_data.get("assets", [])
-    pattern = f"spec-kit-template-{ai_assistant}-{script_type}"
+    pattern = f"vibekit-template-{ai_assistant}-{script_type}"
     matching_assets = [
         asset for asset in assets
         if pattern in asset["name"] and asset["name"].endswith(".zip")
@@ -917,41 +917,6 @@ def download_and_extract_template(project_path: Path, ai_assistant: str, script_
         if tracker:
             tracker.complete("extract")
         
-        # Post-extraction: Rename .specify directories to .vibekit for rebranding
-        if tracker:
-            tracker.add("rebrand", "Rebrand .specify to .vibekit")
-            tracker.start("rebrand")
-        elif verbose:
-            console.print("[cyan]Rebranding directories...[/cyan]")
-        
-        for item in project_path.rglob(".specify"):
-            if item.is_dir():
-                new_name = item.parent / ".vibekit"
-                if new_name.exists():
-                    shutil.rmtree(new_name)
-                item.rename(new_name)
-                if verbose and not tracker:
-                    console.print(f"[cyan]Renamed:[/cyan] {item} → {new_name}")
-        
-        # Also rename speckit.*.md files to vibekit.*.md in agent command directories
-        for agent_dir in project_path.rglob("commands"):
-            if agent_dir.is_dir():
-                for md_file in agent_dir.glob("speckit.*.md"):
-                    new_md_file = md_file.parent / md_file.name.replace("speckit.", "vibekit.")
-                    md_file.rename(new_md_file)
-                    if verbose and not tracker:
-                        console.print(f"[cyan]Renamed:[/cyan] {md_file} → {new_md_file}")
-                    
-                    # Update content: replace speckit. with vibekit.
-                    content = new_md_file.read_text()
-                    updated_content = content.replace("speckit.", "vibekit.")
-                    if updated_content != content:
-                        new_md_file.write_text(updated_content)
-                        if verbose and not tracker:
-                            console.print(f"[cyan]Updated content in:[/cyan] {new_md_file}")
-        
-        if tracker:
-            tracker.complete("rebrand")
         if tracker:
             tracker.add("cleanup", "Remove temporary archive")
 
@@ -1093,7 +1058,7 @@ def init(
     current_dir = Path.cwd()
 
     setup_lines = [
-        "[cyan]Specify Project Setup[/cyan]",
+        "[cyan]Vibekit Project Setup[/cyan]",
         "",
         f"{'Project':<15} [green]{project_path.name}[/green]",
         f"{'Working Path':<15} [dim]{current_dir}[/dim]",
@@ -1158,9 +1123,9 @@ def init(
     console.print(f"[cyan]Selected AI assistant:[/cyan] {selected_ai}")
     console.print(f"[cyan]Selected script type:[/cyan] {selected_script}")
 
-    tracker = StepTracker("Initialize Specify Project")
+    tracker = StepTracker("Initialize Vibekit Project")
 
-    sys._specify_tracker_active = True
+    sys._vibekit_tracker_active = True
 
     tracker.add("precheck", "Check required tools")
     tracker.complete("precheck", "ok")
@@ -1358,7 +1323,7 @@ def check():
 
     console.print(tracker.render())
 
-    console.print("\n[bold green]Specify CLI is ready to use![/bold green]")
+    console.print("\n[bold green]Vibekit CLI is ready to use![/bold green]")
 
     if not git_ok:
         console.print("[dim]Tip: Install git for repository management[/dim]")
@@ -1437,7 +1402,7 @@ def version():
 
     panel = Panel(
         info_table,
-        title="[bold cyan]Specify CLI Information[/bold cyan]",
+        title="[bold cyan]Vibekit CLI Information[/bold cyan]",
         border_style="cyan",
         padding=(1, 2)
     )
